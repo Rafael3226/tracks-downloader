@@ -31,3 +31,7 @@ def process_json_file(file_path):
     except Exception as e:
         print(f"Error processing JSON file {file_path}: {e}")
 
+
+def get_file_name(file_path):
+    return os.path.splitext(os.path.basename(file_path))[0]
+
