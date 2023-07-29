@@ -1,7 +1,7 @@
 import os
 from fileManager import create_directory
 
-APP_PATH = os.path.join("D:", "Music", "Scraped", genre)
+APP_PATH = os.path.join("D:", "TRACKS")
 DOWNLOADS_PATH = ""
 TOPS_PATH = ""
 
