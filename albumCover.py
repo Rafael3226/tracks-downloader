@@ -1,32 +1,18 @@
-import requests
-from pydub import AudioSegment
+import eyed3
+
+from constants import TEMP_IMAGE_PATH
+from dataRequests import download_image
 
 
-def download_image(image_url, output_path):
-    response = requests.get(image_url)
-    if response.status_code == 200:
-        with open(output_path, 'wb') as f:
-            f.write(response.content)
-            print("Image downloaded successfully.")
-    else:
-        print("Failed to download image.")
+def add_album_cover(mp3_file):
+    audiofile = eyed3.load(mp3_file)
+    # Open and read the album cover image file in binary mode
+    with open(TEMP_IMAGE_PATH, "rb") as f:
+        image_data = f.read()
 
+    # Set the album cover
+    audiofile.tag.images.set(3, image_data, "image/jpeg", u"Album Cover")
 
-def add_image_to_audio(audio_path, image_url):
-    output_path = audio_path
-    # Download the image from the URL
-    image_filename = "./temp/image.jpg"
-    download_image(image_url, image_filename)
+    # Save the changes
+    audiofile.tag.save()
 
-    # Load audio and image
-    audio = AudioSegment.from_file(audio_path)
-    image = AudioSegment.from_file(image_filename)
-
-    # Adjust image duration to match audio duration
-    image = image[:len(audio)]
-
-    # Mix the audio with the image
-    audio_with_image = audio.overlay(image)
-
-    # Export the final audio with image
-    audio_with_image.export(output_path, format="mp3")
