@@ -4,11 +4,11 @@ import os
 
 def create_directory(directory_path):
     try:
-        # Use the os.makedirs() function to create the directory
-        os.makedirs(directory_path)
-        print(f"Directory '{directory_path}' created successfully.")
-    except FileExistsError:
-        print(f"Directory '{directory_path}' already exists.")
+        if directory_exists(directory_path):
+            return False
+        else:
+            os.makedirs(directory_path)
+            return True
     except Exception as e:
         print(f"Error creating directory: {e}")
 
@@ -35,3 +35,6 @@ def process_json_file(file_path):
 def get_file_name(file_path):
     return os.path.splitext(os.path.basename(file_path))[0]
 
+
+def directory_exists(directory_path):
+    return os.path.exists(directory_path) and os.path.isdir(directory_path)
