@@ -7,6 +7,9 @@ from dataRequests import download_image
 from fileManager import sha1_checksum
 from youtube import get_youtube_url_by_name, download_youtube_video
 
+from constants import TEMP_MP4_PATH
+from constants import TEMP_IMAGE_PATH
+
 
 class Track:
     def __init__(self, json_track, genre):
@@ -14,8 +17,11 @@ class Track:
         self.title = json_track["title"]
         self.image_url = json_track["imageURL"]
         self.genre = genre
+
         self.file_name = ''
         self.file_path = ''
+        self.temp_mp4_path = TEMP_MP4_PATH
+        self.temp_image_path = TEMP_IMAGE_PATH
 
         self.audio_url = ''
         self.check_sum = ''
@@ -35,16 +41,16 @@ class Track:
         self.check_sum = sha1_checksum(self.file_path)
 
     def __add_album_cover(self):
-        add_album_cover(self.file_path)
+        add_album_cover(self.file_path, self.temp_image_path)
 
     def __convert_to_mp3(self):
-        convert_temp_mp4_to_mp3(self.file_path)
+        convert_temp_mp4_to_mp3(self.temp_mp4_path, self.file_path)
 
     def __download_audio(self):
         download_youtube_video(self.audio_url)
 
     def __download_image(self):
-        download_image(self.image_url)
+        download_image(self.image_url, self.temp_image_path)
 
     def __search_youtube_url(self):
         self.audio_url = get_youtube_url_by_name(self.file_name)

@@ -1,7 +1,5 @@
 import requests
 
-from constants import TEMP_IMAGE_PATH
-
 
 def search_on_google(search_query):
     search_url = f"https://www.google.com/search?q={search_query}"
@@ -10,10 +8,10 @@ def search_on_google(search_query):
     return response
 
 
-def download_image(image_url):
+def download_image(image_url, output_path):
     response = requests.get(image_url)
     if response.status_code == 200:
-        with open(TEMP_IMAGE_PATH, 'wb') as f:
+        with open(output_path, 'wb') as f:
             f.write(response.content)
     else:
         print("Failed to download image.")
