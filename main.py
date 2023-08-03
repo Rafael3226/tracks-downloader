@@ -1,5 +1,5 @@
 from constants import TOPS_PATH
-from fileManager import walk_and_process_directory
+from fileManager import get_files_from_dir
 from genre import Genre
 
 
@@ -10,5 +10,5 @@ def download_all_top_100(files_paths):
 
 
 if __name__ == "__main__":
-    genres = walk_and_process_directory(TOPS_PATH)
+    genres = get_files_from_dir(TOPS_PATH, ".json")
     download_all_top_100(genres)
