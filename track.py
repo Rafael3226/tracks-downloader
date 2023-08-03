@@ -4,6 +4,7 @@ import re
 from albumCover import add_album_cover
 from converter import convert_temp_mp4_to_mp3
 from dataRequests import download_image
+from fileManager import sha1_checksum
 from youtube import get_youtube_url_by_name, download_youtube_video
 
 
@@ -28,10 +29,10 @@ class Track:
         self.__download_image()
         self.__convert_to_mp3()
         self.__add_album_cover()
-        self.__calculate_check_sum()  # TODO
+        self.__calculate_check_sum()
 
     def __calculate_check_sum(self):
-        self.check_sum = ''
+        self.check_sum = sha1_checksum(self.file_path)
 
     def __add_album_cover(self):
         add_album_cover(self.file_path)
@@ -54,4 +55,7 @@ class Track:
     def __create_file_name(self):
         name = f"{self.title} - {self.artist}"
         cleaned_name = re.sub(r'[^&a-zA-Z0-9\-(), ]+', ' ', name)
+        words = cleaned_name.split()
+        cleaned_name = " ".join(words)
         self.file_name = cleaned_name
+
