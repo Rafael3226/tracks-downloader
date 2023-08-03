@@ -26,6 +26,15 @@ def create_directory(directory_path):
         return False
 
 
+def delete_file(file_path):
+    try:
+        os.remove(file_path)
+    except FileNotFoundError as e:
+        logger.warning(e)
+    except Exception as e:
+        logger.error(e)
+
+
 def get_files_from_dir(directory, extension=''):
     directory_list = []
     for root, _, files in os.walk(directory):

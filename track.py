@@ -4,11 +4,10 @@ import re
 from albumCover import add_album_cover
 from converter import convert_temp_mp4_to_mp3
 from dataRequests import download_image
-from fileManager import sha1_checksum
+from fileManager import sha1_checksum, delete_file
 from youtube import get_youtube_url_by_name, download_youtube_video
 
-from constants import TEMP_MP4_PATH
-from constants import TEMP_IMAGE_PATH
+from constants import TEMP_PATH
 
 
 class Track:
@@ -20,14 +19,16 @@ class Track:
 
         self.file_name = ''
         self.file_path = ''
-        self.temp_mp4_path = TEMP_MP4_PATH
-        self.temp_image_path = TEMP_IMAGE_PATH
+        self.temp_mp4_path = ''
+        self.temp_image_path = ''
 
         self.audio_url = ''
         self.check_sum = ''
 
         self.__create_file_name()
         self.__create_file_path()
+        self.__create_temp_mp4_path()
+        self.__create_temp_image_path()
 
     def download(self):
         self.__search_youtube_url()
@@ -36,6 +37,7 @@ class Track:
         self.__convert_to_mp3()
         self.__add_album_cover()
         self.__calculate_check_sum()
+        self.__delete_temp_files()
 
     def __calculate_check_sum(self):
         self.check_sum = sha1_checksum(self.file_path)
@@ -55,9 +57,6 @@ class Track:
     def __search_youtube_url(self):
         self.audio_url = get_youtube_url_by_name(self.file_name)
 
-    def __create_file_path(self):
-        self.file_path = os.path.join(self.genre.file_path, f"{self.file_name}.mp3")
-
     def __create_file_name(self):
         name = f"{self.title} - {self.artist}"
         cleaned_name = re.sub(r'[^&a-zA-Z0-9\-(), ]+', ' ', name)
@@ -65,3 +64,15 @@ class Track:
         cleaned_name = " ".join(words)
         self.file_name = cleaned_name
 
+    def __create_file_path(self):
+        self.file_path = os.path.join(self.genre.file_path, f"{self.file_name}.mp3")
+
+    def __create_temp_mp4_path(self):
+        self.temp_mp4_path = os.path.join(TEMP_PATH, f"{self.file_name}.mp4")
+
+    def __create_temp_image_path(self):
+        self.temp_image_path = os.path.join(TEMP_PATH, f"{self.file_name}.jpg")
+
+    def __delete_temp_files(self):
+        delete_file(self.temp_mp4_path)
+        delete_file(self.temp_image_path)
