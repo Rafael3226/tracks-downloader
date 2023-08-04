@@ -18,7 +18,7 @@ def get_genre_by_name(genre_name):
         log.info(f"Looking up genre by name: {genre_name}")
         genre = GenreDB.get(GenreDB.name == genre_name)
         log.info(f"Genre found with ID: {genre.id}")
-        return genre.id
+        return genre
     except GenreDB.DoesNotExist:
         log.warning(f"Genre with name '{genre_name}' not found.")
         return None
@@ -47,7 +47,7 @@ def create_track(title, artist, genre, file_name, file_path, image_url, audio_ur
 def get_track_by_file_name(file_name):
     try:
         log.info(f"Looking up track by file name: {file_name}")
-        track = GenreDB.get(TrackDB.file_name == file_name)
+        track = TrackDB.get(TrackDB.file_name == file_name)
         log.info(f"Track found with id: {track.id}")
         return track.id
     except TrackDB.DoesNotExist:
