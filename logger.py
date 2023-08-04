@@ -1,41 +1,36 @@
 import logging
 
-# Basic configuration
-logging.basicConfig(
-    level=logging.DEBUG,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-    filename='app.log',  # Specify the log file name
-    filemode='a'  # Use 'a' for append mode, 'w' for overwrite
-)
 
-# Additional configuration (optional)
-# Create a logger instance
-logger = logging.getLogger('my_logger')
+class Logger:
+    def __init__(self, log_name="my_log"):
+        log_file_name = f"{log_name}.log"
+        self.log_file_name = log_file_name
+        self.logger = logging.getLogger(log_name)
+        self.logger.setLevel(logging.DEBUG)
 
-# Set the logging level for the logger
-logger.setLevel(logging.DEBUG)
+        formatter = logging.Formatter(
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        )
 
-# Create a file handler (optional, if not using basicConfig's filename)
-file_handler = logging.FileHandler('app.log')
-file_handler.setLevel(logging.DEBUG)
+        file_handler = logging.FileHandler(log_file_name)
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
 
-# Create a console handler (optional, for displaying logs in the console)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        self.logger.addHandler(console_handler)
 
-# Create a formatter and attach it to the handlers
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler.setFormatter(formatter)
-console_handler.setFormatter(formatter)
+    def info(self, message):
+        self.logger.info(message)
 
-# Attach the handlers to the logger
-logger.addHandler(file_handler)
-logger.addHandler(console_handler)
+    def warning(self, message):
+        self.logger.warning(message)
 
-# Logging examples
-# logger.debug("This is a debug message")
-# logger.info("This is an info message")
-# logger.warning("This is a warning message")
-# logger.error("This is an error message")
-# logger.critical("This is a critical message")
+    def error(self, message):
+        self.logger.error(message)
+
+    def debug(self, message):
+        self.logger.debug(message)
+
+
+log = Logger()
