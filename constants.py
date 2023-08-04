@@ -10,4 +10,6 @@ TOPS_PATH = os.path.join(APP_PATH, "tops")
 DOWNLOADS_PATH = os.path.join(APP_PATH, "downloads")
 TEMP_PATH = os.path.join(APP_PATH, "temp")
 
+# Threads
+MAX_WORKERS = 2
 
