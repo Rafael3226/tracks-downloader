@@ -20,7 +20,7 @@ def get_genre_by_name(genre_name):
         log.info(f"Genre found with ID: {genre.id}")
         return genre
     except GenreDB.DoesNotExist:
-        log.warning(f"Genre with name '{genre_name}' not found.")
+        log.info(f"Genre with name '{genre_name}' not found.")
         return None
     except Exception as e:
         log.error(f"Error occurred while looking up genre: {str(e)}")
@@ -51,7 +51,7 @@ def get_track_by_file_name(file_name):
         log.info(f"Track found with id: {track.id}")
         return track.id
     except TrackDB.DoesNotExist:
-        log.warning(f"Track with name '{file_name}' not found.")
+        log.info(f"Track with name '{file_name}' not found.")
         return None
     except Exception as e:
         log.error(f"Error occurred while looking up track: {str(e)}")
