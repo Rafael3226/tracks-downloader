@@ -4,6 +4,7 @@ from constants import DOWNLOADS_PATH, MAX_WORKERS
 from fileManager import process_json_file, get_file_name, create_directory
 from logger import log
 from models.querys import get_genre_id_by_name, create_genre, get_track_by_file_name
+from threads import thread_pool
 from track import Track
 
 
@@ -32,7 +33,7 @@ class Genre:
 
     def download_track_list(self):
         for json_track in self.track_list:
-            self.__download_track(json_track)
+            thread_pool.submit(self.__download_track, json_track)
 
     def __download_track(self, json_track):
         try:
