@@ -5,6 +5,7 @@ from albumCover import add_album_cover
 from converter import convert_temp_mp4_to_mp3
 from dataRequests import download_image
 from fileManager import sha1_checksum, delete_file, copy_file
+from models.querys import create_track
 from youtube import get_youtube_url_by_name, download_youtube_video
 
 from constants import TEMP_PATH
@@ -41,6 +42,8 @@ class Track:
         # Move Track to folder
         self.__copy_to_genre_dir()
         self.__delete_temp_files()
+        # Save Track Info
+        self.__db_save()
 
     def __search_youtube_url(self):
         self.audio_url = get_youtube_url_by_name(self.file_name)
@@ -82,3 +85,8 @@ class Track:
 
     def __copy_to_genre_dir(self):
         copy_file(self.temp_mp3_path, self.genre.path)
+
+    def __db_save(self):
+        create_track(title=self.title, artist=self.artist, genre=self.genre.id, file_name=self.file_name,
+                     file_path=self.file_path, image_url=self.image_url, audio_url=self.audio_url,
+                     check_sum=self.check_sum)
