@@ -66,7 +66,7 @@ def get_files_from_dir(directory, extension=''):
 def process_json_file(file_path):
     try:
         log.info(f"Processing JSON file: {file_path}")
-        with open(file_path, 'r') as json_file:
+        with open(file_path, 'r', encoding="utf8") as json_file:
             data = json.load(json_file)
             log.info("JSON file processed successfully.")
             return data
