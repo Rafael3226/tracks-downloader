@@ -13,7 +13,7 @@ def create_genre(name, path):
         raise e
 
 
-def get_genre_id_by_name(genre_name):
+def get_genre_by_name(genre_name):
     try:
         log.info(f"Looking up genre by name: {genre_name}")
         genre = GenreDB.get(GenreDB.name == genre_name)
@@ -27,6 +27,11 @@ def get_genre_id_by_name(genre_name):
         raise e
 
 
+def get_genre_id_by_name(genre_name):
+    genre = get_genre_by_name(genre_name)
+    return genre.id if genre is not None else None
+
+
 def create_track(title, artist, genre, file_name, file_path, image_url, audio_url, check_sum):
     try:
         log.info(f"Creating track: {title} by {artist} in genre {genre}")
@@ -36,4 +41,18 @@ def create_track(title, artist, genre, file_name, file_path, image_url, audio_ur
         return track.id
     except Exception as e:
         log.error(f"Error occurred while creating track: {str(e)}")
+        raise e
+
+
+def get_track_by_file_name(file_name):
+    try:
+        log.info(f"Looking up track by file name: {file_name}")
+        track = GenreDB.get(TrackDB.file_name == file_name)
+        log.info(f"Track found with id: {track.id}")
+        return track.id
+    except TrackDB.DoesNotExist:
+        log.warning(f"Track with name '{file_name}' not found.")
+        return None
+    except Exception as e:
+        log.error(f"Error occurred while looking up track: {str(e)}")
         raise e

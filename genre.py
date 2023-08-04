@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from constants import DOWNLOADS_PATH, MAX_WORKERS
 from fileManager import process_json_file, get_file_name, create_directory
 from logger import log
-from models.querys import get_genre_id_by_name, create_genre
+from models.querys import get_genre_id_by_name, create_genre, get_track_by_file_name
 from threads import thread_pool
 from track import Track
 
@@ -39,7 +39,9 @@ class Genre:
     def __download_track(self, json_track):
         try:
             t = Track(json_track, self)
-            t.download()
+            track_db = get_track_by_file_name(t.file_name)
+            if track_db is None:
+                t.download()
         except Exception as e:
             log.error(f"Error occurred while downloading track: {str(e)}")
 
