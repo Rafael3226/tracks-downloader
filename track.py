@@ -37,10 +37,11 @@ class Track:
         self.__download_audio()
         self.__convert_to_mp3()
         self.__download_image()
-        self.__add_album_cover()
         self.__calculate_check_sum()
         # Move Track to folder
         self.__copy_to_genre_dir()
+        self.__add_album_cover()
+        # Delete Files
         self.__delete_temp_files()
         # Save Track Info
         self.__db_save()
@@ -55,12 +56,7 @@ class Track:
         convert_temp_mp4_to_mp3(self.temp_mp4_path, self.temp_mp3_path)
 
     def __download_image(self):
-        temp_image_path = os.path.join(TEMP_PATH, f"{self.file_name}.jpg")
-        download_image(self.image_url, temp_image_path)
-        self.temp_image_path = temp_image_path
-
-    def __add_album_cover(self):
-        add_album_cover(self.temp_mp4_path, self.temp_image_path)
+        download_image(self.image_url, self.temp_image_path)
 
     def __calculate_check_sum(self):
         self.check_sum = sha1_checksum(self.temp_mp3_path)
@@ -73,7 +69,7 @@ class Track:
         self.file_name = cleaned_name
 
     def __init_all_paths(self):
-        self.file_path = os.path.join(self.genre.file_path, f"{self.file_name}.mp3")
+        self.file_path = os.path.join(self.genre.path, f"{self.file_name}.mp3")
         self.temp_mp4_path = os.path.join(TEMP_PATH, f"{self.file_name}.mp4")
         self.temp_image_path = os.path.join(TEMP_PATH, f"{self.file_name}.jpg")
         self.temp_mp3_path = os.path.join(TEMP_PATH, f"{self.file_name}.mp3")
@@ -90,3 +86,12 @@ class Track:
         create_track(title=self.title, artist=self.artist, genre=self.genre.id, file_name=self.file_name,
                      file_path=self.file_path, image_url=self.image_url, audio_url=self.audio_url,
                      check_sum=self.check_sum)
+
+    def __add_album_cover(self):
+        add_album_cover(self.file_path, self.temp_image_path)
+
+    def fix_image(self):
+        # Temp Files
+        self.__download_image()
+        self.__add_album_cover()
+        delete_file(self.temp_image_path)

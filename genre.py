@@ -1,6 +1,6 @@
 import os
 
-from constants import DOWNLOADS_PATH, MAX_WORKERS
+from constants import DOWNLOADS_PATH
 from fileManager import process_json_file, get_file_name, create_directory
 from logger import log
 from models.querys import get_genre_id_by_name, create_genre, get_track_by_file_name
@@ -34,6 +34,18 @@ class Genre:
     def download_track_list(self):
         for json_track in self.track_list:
             thread_pool.submit(self.__download_track, json_track)
+    def fix_images_from_list(self):
+        for json_track in self.track_list:
+            thread_pool.submit(self.__fix_track_image, json_track)
+
+    def __fix_track_image(self, json_track):
+        try:
+            t = Track(json_track, self)
+            track_db = get_track_by_file_name(t.file_name)
+            if track_db is not None:
+                t.fix_image()
+        except Exception as e:
+            log.error(f"TRACK_ERROR occurred while fixing track image: {str(e)}")
 
     def __download_track(self, json_track):
         try:
